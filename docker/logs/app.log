@@ -1,0 +1,5 @@
+{"level":"info","message":"index app started","timestamp":"2023-04-05T04:54:26.318Z"}
+{"level":"info","message":"random endpoint hit","span_id":"c101144855a7b48b","timestamp":"2023-04-05T04:55:51.674Z","trace_flags":"01","trace_id":"3f945356d4adef7dbdf710add16f5970"}
+{"level":"info","message":"hello endpoint hit","span_id":"f60ce3ef0242eebd","timestamp":"2023-04-05T05:00:11.299Z","trace_flags":"01","trace_id":"5a48315c089a9ca1a7c49beada2b40ea"}
+{"level":"info","message":"index app started","timestamp":"2023-04-05T06:52:36.740Z"}
+{"level":"info","message":"random endpoint hit","span_id":"ebecf63cc231ce59","timestamp":"2023-04-05T06:53:09.564Z","trace_flags":"01","trace_id":"86a7e95e05ed5e82527c5da27b382c59"}

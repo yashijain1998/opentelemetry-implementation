@@ -1,0 +1,66 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+       cors:
+          allowed_origins:
+            - http://*
+            - https://*
+  filelog:
+    include: [ /conf/app.log ]
+    start_at: beginning
+    operators:
+      - type: json_parser
+        timestamp:
+          parse_from: attributes.time
+          layout: '%Y-%m-%d,%H:%M:%S %z'
+      - type: move
+        from: attributes.message
+        to: body
+      - type: remove
+        field: attributes.time   
+processors:
+  batch:
+
+exporters:
+  logging:
+    logLevel: $LOG_EXPORTER_LOG_LEVEL
+  jaeger:
+    endpoint: jaeger-all-in-one:14250
+    tls:
+      insecure: true
+  zipkin:
+    endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
+  prometheus:
+    endpoint: "0.0.0.0:9464"
+  otlp:
+    endpoint: https://otlp.eu01.nr-data.net:4317
+    headers:
+      api-key: eu01xx152240323295709bdc0307bf8dFFFFNRAL
+  loki:
+    endpoint: "https://461941:eyJrIjoiOWZjMTMzYjQ0YWQ3ZjVkM2Y1MzdjMGE3MTk2ZTU3OTk3NWQ0NWZhYyIsIm4iOiJ5YXNoaS1hcGkta2V5IiwiaWQiOjgyODYzNX0=@logs-prod-006.grafana.net/loki/api/v1/push"
+    tenant_id: "example2"
+    labels:
+      attributes:
+        log.file.name: "filename"
+
+extensions:
+  health_check:
+  pprof:
+  zpages:
+
+service:
+  extensions: [health_check, pprof, zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [zipkin, jaeger, otlp]
+      processors: [batch]
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus, otlp]
+      processors: [batch]
+    logs:
+      receivers: [filelog]
+      processors: [batch]
+      exporters: [otlp, loki]
